@@ -7,57 +7,51 @@ SDL_Renderer* main_renderer = NULL;
 
 void InitSDL2();
 void DrawCenterLine();
+
 void Exit();
+
+typedef struct s_player
+{
+	SDL_Rect Player1,Player2;
+}player_t;
+void InitializePlayers(player_t *Game);
+void DrawPlayers(player_t *Game);
 
 int main(int argc, char* argv[])
 {
 	InitSDL2(); // Da partida no motor do sdl
-
-	SDL_Rect Player1,Player2;
-	Player1.x = 5;   /* */   Player2.x = 765;   // inicialização dos retangulos..
-	Player1.y = 5;   /* */   Player2.y = 470;   // inicialização dos retangulos..
-	Player1.w = 25;  /* */   Player2.w = 25;    // inicialização dos retangulos..
-	Player1.h = 125; /* */   Player2.h = 125;   // inicialização dos retangulos..
-
+	player_t *Game;
+	Game = (player_t*)malloc(sizeof(player_t));
+	InitializePlayers(Game);
+	
 	while(1)
 	{
 		SDL_SetRenderDrawColor(main_renderer, 0, 0, 0, 255); // seta preto como plano de fundo.
 		SDL_RenderClear(main_renderer ); // limpa o render [ janela atual ]
+		DrawPlayers(Game);
 		DrawCenterLine(); // desenha a linha central..
-		
-		
-		SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei 
-		SDL_RenderFillRect(main_renderer, &Player1); // desenha um retangulo
-		
-		SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei 
-		SDL_RenderFillRect(main_renderer, &Player2); // desenha um retangulo
-		
-		
 		SDL_Event event; // detecção de eventos sdl
 		while(SDL_PollEvent(&event))
 		{
 				switch(event.key.keysym.sym) // detecção do teclado
 				{
 					case SDLK_w:
-								Player1.y-=10;
+								Game->Player1.y-=10;
 								break;
 					case SDLK_s:
-								Player1.y+=10;
+								Game->Player1.y+=10;
 								break;
                     case SDLK_UP:
-								Player2.y-=10;
+								Game->Player2.y-=10;
 								break;
 					case SDLK_DOWN:
-								Player2.y+=10;
+								Game->Player2.y+=10;
 								break;
                     default:
                         break;
 				}
 		}
-
-
 		SDL_RenderPresent(main_renderer );
-		//SDL_Delay(100);
 	}
 	Exit();
 }
@@ -80,6 +74,23 @@ void DrawCenterLine()
 			SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255);
 			SDL_RenderDrawPoint(main_renderer, 390, i);
 		}
+}
+void InitializePlayers(player_t *Game)
+{
+	Game->Player1.x = 5;   /* */   Game->Player2.x = 765;   // inicialização dos retangulos..
+	Game->Player1.y = 5;   /* */   Game->Player2.y = 470;   // inicialização dos retangulos..
+	Game->Player1.w = 25;  /* */   Game->Player2.w = 25;    // inicialização dos retangulos..
+	Game->Player1.h = 125; /* */   Game->Player2.h = 125;   // inicialização dos retangulos..
+}
+void DrawPlayers(player_t *Game)
+{
+		
+		SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei 
+		SDL_RenderFillRect(main_renderer, &Game->Player1); // desenha um retangulo
+		
+		SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei 
+		SDL_RenderFillRect(main_renderer, &Game->Player2); // desenha um retangulo
+	
 }
 void Exit()
 {
