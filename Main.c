@@ -36,15 +36,31 @@ int main(int argc, char* argv[])
 				switch(event.key.keysym.sym) // detecção do teclado
 				{
 					case SDLK_w:
+								if(Game->Player1.y<=0)
+								{
+									Game->Player1.y=10;
+								}
 								Game->Player1.y-=10;
 								break;
 					case SDLK_s:
+								if(Game->Player1.y>=475)
+								{
+									Game->Player1.y=465;
+								}
 								Game->Player1.y+=10;
 								break;
                     case SDLK_UP:
+								if(Game->Player2.y<=0)
+								{
+									Game->Player2.y=10;
+								}
 								Game->Player2.y-=10;
 								break;
 					case SDLK_DOWN:
+								if(Game->Player2.y>=475)
+								{
+									Game->Player2.y=465;
+								}
 								Game->Player2.y+=10;
 								break;
                     default:
