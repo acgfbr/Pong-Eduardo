@@ -2,7 +2,7 @@
 
 void InitSDL2()
 {
-    const char title[] =  "Pong by Elite Game Dev - 21/09/2015";
+    const string title =  "Pong by Elite Game Dev - 21/09/2015";
     SDL_Init(SDL_INIT_EVERYTHING);
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     SDL_Window * main_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, main_window_x, main_window_y, SDL_WINDOW_SHOWN);
@@ -13,14 +13,14 @@ void InitSDL2()
     }
 }
 
-void DrawCenterLine()
+void DrawCenterLine(colors_t* list)
 {
     int i = 0;
 
     for (i = 0; i < 600; i++)
     {
         i += 10;
-        SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
         SDL_RenderDrawPoint(main_renderer, 390, i);
     }
 }
@@ -40,18 +40,25 @@ void InitializePlayers(player_t *Game)
     Game->multiplierX = 1;
     Game->multiplierY = 1;
 
+    /* Score Player1 */                   /* Score Player2 */
+    Game->Score_Player1.x = 320; /* */  Game->Score_Player2.x = 395;
+    Game->Score_Player1.y = 5;   /* */  Game->Score_Player2.y = 5;
+    Game->Score_Player1.w = 59;  /* */  Game->Score_Player2.w = 59;
+    Game->Score_Player1.h = 49;  /* */  Game->Score_Player2.h = 49;
+    Game->PointsPlayer1 = 0;     /* */  Game->PointsPlayer2 = 0;
 }
 
-void DrawPlayers(player_t *Game)
+void DrawPlayers(player_t *Game, colors_t* list)
 {
 
-    SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei
+
+    SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
     SDL_RenderFillRect(main_renderer, &Game->Player1); // desenha um retangulo
 
-    SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei
+    SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
     SDL_RenderFillRect(main_renderer, &Game->Player2); // desenha um retangulo4
 
-    SDL_SetRenderDrawColor(main_renderer, 255, 255, 255, 255); // seta branco a cor do retangulo que desenharei
+    SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
     SDL_RenderFillRect(main_renderer, &Game->Bolinha); // desenha um retangulo
 
 }
@@ -67,6 +74,7 @@ void Exit()
 
 void funcaoBolinha(player_t *Game)
 {
+    int Delay=0;
 
     CheckCollisionLeft(Game);
     CheckCollisionRight(Game);
@@ -74,6 +82,9 @@ void funcaoBolinha(player_t *Game)
     CheckCollisionBottom(Game);
     Game->Bolinha.x += Game->multiplierX;
     Game->Bolinha.y += Game->multiplierY;
+
+    while(Delay < 1999999)
+        Delay++;
 }
 
 
@@ -100,12 +111,14 @@ void CheckCollisionLeft(player_t *Game)
         if (bottomBola >= player1Top && topBola <= player1Bottom)
         {
             Game->multiplierX = Game->multiplierX * -1;
+            Game->multiplierY = Game->multiplierY *-1;
             printf("DEFENDEU 1 \n");
         }
         else
 
         {
             printf("GOL \n");
+            Game->PointsPlayer2++;
             Game->multiplierX = Game->multiplierX * -1;
         }
     }
@@ -136,12 +149,14 @@ void CheckCollisionRight(player_t *Game)
         if (bottomBola >= player2Top && topBola <= player2Bottom)
         {
             Game->multiplierX = Game->multiplierX * -1;
+            Game->multiplierY = Game->multiplierY *-1;
             printf("DEFENDEU 2 \n");
         }
 
         else
         {
             printf("GOL2 \n");
+            Game->PointsPlayer1++;
             Game->multiplierX = Game->multiplierX * -1;
         }
     }
@@ -175,3 +190,120 @@ void CheckCollisionBottom(player_t *Game)
 
 }
 
+colors_t *Create_Color(colors_t* list, string name, int Red, int Green, int Blue)
+{
+    colors_t *Aux = (colors_t*) malloc(sizeof(colors_t));
+
+    if(Aux == NULL)
+    {
+        printf("Malloc Error - Create_Color function.\n");
+        return NULL;
+    }
+    else
+    {
+        Aux->R = Red;
+        Aux->G = Green;
+        Aux->B = Blue;
+        Aux->color_name = name;
+        Aux->next_color = list;
+
+        return Aux;
+    }
+}
+
+colors_t *Get_Color(colors_t *list, string name)
+{
+    if(list == NULL)
+    {
+        printf("List does not exist\n");
+        return NULL;
+    }
+    else
+    {
+        colors_t *aux = list;
+
+        while(aux != NULL)
+        {
+             if(!strcmp(aux->color_name, name))
+                 return aux;
+
+             else
+                aux = aux->next_color;
+        }
+    }
+
+    return NULL;
+}
+
+colors_t* Create_List(colors_t* list)
+{
+    colors_t *ColorList = (colors_t*) malloc(sizeof(colors_t));
+
+    ColorList->next_color = list;
+
+    ColorList = Create_Color(ColorList, "Red", 255, 0, 0);
+    ColorList = Create_Color(ColorList, "OrangeRed", 255, 69, 0);
+    ColorList = Create_Color(ColorList, "Firebrick", 178, 34, 34);
+    ColorList = Create_Color(ColorList, "Chocolate", 210, 105, 30);
+    ColorList = Create_Color(ColorList, "Marrom Filtro de barro", 165,42,42);
+    ColorList = Create_Color(ColorList, "Gold", 255, 215, 0);
+    ColorList = Create_Color(ColorList, "NightGoldenrod", 238, 221, 130);
+    ColorList = Create_Color(ColorList, "Goldenrod", 218, 165, 32);
+    ColorList = Create_Color(ColorList, "DarkGoldenrod", 184, 134, 11);
+    ColorList = Create_Color(ColorList, "RoyalBlue", 72, 118, 255);
+    ColorList = Create_Color(ColorList, "SkyBlue", 135, 206, 255);
+    ColorList = Create_Color(ColorList, "LightSkyBlue", 176, 226, 255);
+    ColorList = Create_Color(ColorList, "DeepSkyBlue", 0, 191, 255);
+    ColorList = Create_Color(ColorList, "Green", 0, 255, 0);
+    ColorList = Create_Color(ColorList, "MediumSpringGreen", 0, 250, 154);
+    ColorList = Create_Color(ColorList, "ForestGreen", 34, 139, 34);
+    ColorList = Create_Color(ColorList, "LimeGreen", 50, 205, 50);
+    ColorList = Create_Color(ColorList, "Pink", 255, 192, 203);
+    ColorList = Create_Color(ColorList, "LightPink", 255, 182, 193);
+    ColorList = Create_Color(ColorList, "DeepPink", 255, 20, 147);
+    ColorList = Create_Color(ColorList, "HotPink", 255, 105, 180);
+    ColorList = Create_Color(ColorList, "Magenta", 255, 0, 255);
+    ColorList = Create_Color(ColorList, "Orchid", 218, 112, 214);
+    ColorList = Create_Color(ColorList, "MediumOrchid", 186, 85, 211);
+    ColorList = Create_Color(ColorList, "DarkOrchid", 153, 50, 204);
+    ColorList = Create_Color(ColorList, "Black", 0, 0, 0);
+    ColorList = Create_Color(ColorList, "White", 255, 255, 255);
+
+    return ColorList;
+}
+
+void Free_List(colors_t *list)
+{
+    colors_t *aux, *next;
+
+    aux = list;
+
+    while(aux != NULL)
+    {
+        next = aux->next_color;
+        free(aux);
+        aux = next;
+    }
+
+}
+
+void Init_Score()
+{
+    Points[0] = IMG_LoadTexture(main_renderer, "Number_0.bmp");
+    Points[1] = IMG_LoadTexture(main_renderer,"Number_1.bmp");
+    Points[2] = IMG_LoadTexture(main_renderer,"Number_2.bmp");
+    Points[3] = IMG_LoadTexture(main_renderer,"Number_3.bmp");
+    Points[4] = IMG_LoadTexture(main_renderer,"Number_4.bmp");
+    Points[5] = IMG_LoadTexture(main_renderer,"Number_5.bmp");
+    Points[6] = IMG_LoadTexture(main_renderer,"Number_6.bmp");
+    Points[7] = IMG_LoadTexture(main_renderer,"Number_7.bmp");
+    Points[8] = IMG_LoadTexture(main_renderer,"Number_8.bmp");
+    Points[9] = IMG_LoadTexture(main_renderer,"Number_9.bmp");
+    Points[10] = IMG_LoadTexture(main_renderer,"Number_10.bmp");
+}
+
+void DrawScore(player_t *Game)
+{
+    SDL_RenderCopy(main_renderer, Points[Game->PointsPlayer1], NULL, &Game->Score_Player1);
+    SDL_RenderCopy(main_renderer, Points[Game->PointsPlayer2], NULL, &Game->Score_Player2);
+}
