@@ -9,7 +9,9 @@ SDL_Window *main_window;
 SDL_Renderer *main_renderer;
 SDL_Texture *Points[11];
 //Mix_Music *themeSong = NULL;
-
+SDL_Surface *menu;
+SDL_Surface *play;
+SDL_Surface* tela;
 
 typedef struct s_player
 {

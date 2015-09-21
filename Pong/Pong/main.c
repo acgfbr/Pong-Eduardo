@@ -1,83 +1,77 @@
 #include "pong.h"
 
+void Play();
+
 int main(int argc, char* argv[])
 {
-    InitSDL2(); // Da partida no motor do sdl
-    player_t *Game;
-    Game = (player_t*)malloc(sizeof(player_t));
-    InitializePlayers(Game);
-    Init_Score();
-    colors_t *Pallet = NULL, *ColorLine=NULL, *ColorGame=NULL, *Background=NULL;
+	// START DO SDL #####################################
+	const string title = "Pong by Elite Game Dev - 21/09/2015";
+	SDL_Init(SDL_INIT_EVERYTHING);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	SDL_Window * main_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, main_window_x, main_window_y, SDL_WINDOW_SHOWN);
 
-    Pallet = Create_List(Pallet);
-    ColorLine = Get_Color(Pallet, "Red");
-    ColorGame = Get_Color(Pallet, "Gold");
-    Background = Get_Color(Pallet, "Black");
+	if (main_window != NULL)
+	{
+		main_renderer = SDL_CreateRenderer(main_window, -1, 0);
+	}
+	// START DO SDL #####################################
 
-	//PlaySound();
+	// LOAD IMAGENS
+	menu = SDL_LoadBMP("menu.bmp");
+	play = SDL_LoadBMP("Play.bmp");
+	// LOAD IMAGENS
+	int Menu = 1;
 
-    while (1)
-    {
-        SDL_SetRenderDrawColor(main_renderer, Background->R, Background->G, Background->B, 255); // seta preto como plano de fundo.
-        SDL_RenderClear(main_renderer); // limpa o render [ janela atual ]
-        DrawPlayers(Game, ColorGame);
-        DrawCenterLine(ColorLine); // desenha a linha central..
-        DrawScore(Game);
-        SDL_Event event; // detecção de eventos sdl
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.key.keysym.sym) // detecção do teclado
-            {
-                case SDLK_w:
-                            if (Game->Player1.y <= 0)
-                            {
-                                Game->Player1.y = 10;
-                            }
-                            Game->Player1.y -= 10;
-                            break;
-
-                case SDLK_s:
-                            if (Game->Player1.y >= 475)
-                            {
-                                Game->Player1.y = 465;
-                            }
-                            Game->Player1.y += 10;
-                            break;
-
-                case SDLK_UP:
-                            if (Game->Player2.y <= 0)
-                            {
-                                Game->Player2.y = 10;
-                            }
-                            Game->Player2.y -= 10;
-                            break;
-
-                case SDLK_DOWN:
-                            if (Game->Player2.y >= 475)
-                            {
-                                Game->Player2.y = 465;
-                            }
-                            Game->Player2.y += 10;
-                            break;
-                            default:
-                            break;
-            }
-        }
-
-        funcaoBolinha(Game);
-
-
-        //chama aqui a funcao de checa colisao da bolinha e inverte o lado.
-        SDL_RenderPresent(main_renderer);
-
-		//Check PLayer Points
-		if (Game->PointsPlayer1 == 10)
+	while (Menu)
+	{
+		SDL_Event event;
+		tela = SDL_GetWindowSurface(main_window);
+		while (SDL_PollEvent(&event))
 		{
-			break;
-		}
-		
 
-    }
-    Free_List(Pallet);
+			SDL_SetRenderDrawColor(main_renderer, 0, 0, 0, 255); // seta preto como plano de fundo.
+			SDL_RenderClear(main_renderer); // limpa o render [ janela atual ]
+
+			if ((event.button.x >= 601 && event.button.y >= 69) && (event.button.x <= 688 && event.button.y <= 94)) // START
+			{
+				SDL_SetRenderDrawColor(main_renderer, 0, 0, 0, 255);
+				SDL_BlitSurface(play, NULL, tela, NULL);
+				SDL_UpdateWindowSurface(main_window);
+			}
+			else if ((event.button.x >= 601 && event.button.y >= 149) && (event.button.x <= 679 && event.button.y <= 174)) // EXIT
+			{
+
+			}
+			else
+			{
+				SDL_SetRenderDrawColor(main_renderer, 0, 0, 0, 255);
+				SDL_BlitSurface(menu, NULL, tela, NULL);
+				SDL_UpdateWindowSurface(main_window);
+			}
+
+
+			switch (event.type)
+			{
+
+
+			case SDL_MOUSEBUTTONDOWN:
+				if (event.button.button == SDL_BUTTON_LEFT || event.button.button == SDL_BUTTON_RIGHT)
+				{
+					
+					if ((event.button.x >= 601 && event.button.y >= 69) && (event.button.x <= 688 && event.button.y <= 94)) // START
+					{
+						Menu = 0;
+						Play();
+					}
+					else if ((event.button.x >= 601 && event.button.y >= 149) && (event.button.x <= 679 && event.button.y <= 174)) // EXIT
+					{
+						Exit();
+					}
+				}
+				break;
+			}
+		}
+	}
+	
     Exit();
 }
