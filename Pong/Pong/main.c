@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
     ColorGame = Get_Color(Pallet, "Gold");
     Background = Get_Color(Pallet, "Black");
 
+	//PlaySound();
+
     while (1)
     {
         SDL_SetRenderDrawColor(main_renderer, Background->R, Background->G, Background->B, 255); // seta preto como plano de fundo.
@@ -67,6 +69,14 @@ int main(int argc, char* argv[])
 
         //chama aqui a funcao de checa colisao da bolinha e inverte o lado.
         SDL_RenderPresent(main_renderer);
+
+		//Check PLayer Points
+		if (Game->PointsPlayer1 == 10)
+		{
+			break;
+		}
+		
+
     }
     Free_List(Pallet);
     Exit();

@@ -56,7 +56,7 @@ void DrawPlayers(player_t *Game, colors_t* list)
     SDL_RenderFillRect(main_renderer, &Game->Player1); // desenha um retangulo
 
     SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
-    SDL_RenderFillRect(main_renderer, &Game->Player2); // desenha um retangulo4
+    SDL_RenderFillRect(main_renderer, &Game->Player2); // desenha um retangulo
 
     SDL_SetRenderDrawColor(main_renderer, list->R, list->G, list->B, 255);
     SDL_RenderFillRect(main_renderer, &Game->Bolinha); // desenha um retangulo
@@ -118,6 +118,7 @@ void CheckCollisionLeft(player_t *Game)
 
         {
             printf("GOL \n");
+			PointRegisterSound();
             Game->PointsPlayer2++;
             Game->multiplierX = Game->multiplierX * -1;
         }
@@ -156,6 +157,7 @@ void CheckCollisionRight(player_t *Game)
         else
         {
             printf("GOL2 \n");
+			PointRegisterSound();
             Game->PointsPlayer1++;
             Game->multiplierX = Game->multiplierX * -1;
         }
@@ -306,4 +308,17 @@ void DrawScore(player_t *Game)
 {
     SDL_RenderCopy(main_renderer, Points[Game->PointsPlayer1], NULL, &Game->Score_Player1);
     SDL_RenderCopy(main_renderer, Points[Game->PointsPlayer2], NULL, &Game->Score_Player2);
+}
+
+
+//void PlaySound()
+//{
+//	Mix_Music *themeSong = Mix_LoadMUS("imperialmarch.wav");
+//	Mix_PlayMusic(themeSong, 0);
+//}
+
+void PointRegisterSound()
+{
+	Mix_Music *pointSong = Mix_LoadMUS("mk-soul.wav");
+	Mix_PlayMusic(pointSong, 0);
 }

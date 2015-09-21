@@ -8,6 +8,7 @@ const string title;
 SDL_Window *main_window;
 SDL_Renderer *main_renderer;
 SDL_Texture *Points[11];
+//Mix_Music *themeSong = NULL;
 
 
 typedef struct s_player
@@ -31,6 +32,7 @@ colors_t;
 void InitSDL2();
 void DrawCenterLine(colors_t* list);
 void Exit();
+void PointRegisterSound();
 void InitializePlayers(player_t *Game);
 void DrawPlayers(player_t *Game, colors_t* list);
 void funcaoBolinha(player_t *Game);
