@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 	// START DO SDL #####################################
 	const string title = "Pong by Elite Game Dev - 21/09/2015";
 	SDL_Init(SDL_INIT_EVERYTHING);
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	SDL_Window * main_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, main_window_x, main_window_y, SDL_WINDOW_SHOWN);
 
 	if (main_window != NULL)
